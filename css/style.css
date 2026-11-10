@@ -1058,50 +1058,36 @@ button {
   text-align: left;
 }
 .testimonial-card {
-  padding: 20px;
-  border: 1px dashed var(--color-line);
-  border-top: 3px solid var(--color-yellow);
-  border-radius: 4px;
+  background: var(--color-yellow);
+  color: var(--color-ink);
+  border-radius: 12px;
+  padding: clamp(24px, 2.2vw, 36px);
+  min-height: clamp(380px, 32vw, 520px);
   display: flex;
   flex-direction: column;
 }
-.testimonial-card p {
-  font-size: 1.25rem;
-  line-height: 1.45;
-  color: var(--color-ink);
-  margin-bottom: 20px;
-  flex-grow: 1; /* keeps names aligned along the bottom of uneven quotes */
+.testimonial-quote {
+  font-size: clamp(18px, 1.3vw, 22px);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  flex-grow: 1; /* pushes the name to the bottom of the card */
+  margin: 0 0 32px;
 }
 .testimonial-person {
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.testimonial-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: repeating-linear-gradient(
-    135deg,
-    var(--color-line),
-    var(--color-line) 4px,
-    var(--color-surface) 4px,
-    var(--color-surface) 8px
-  );
-  border: 1px solid var(--color-line);
-}
-.testimonial-meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  line-height: 1.5;
-  text-transform: uppercase;
-  color: var(--color-grey);
+  flex-direction: column;
+  gap: 12px;
 }
 .testimonial-name {
-  font-weight: 600;
-  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 1.8vw, 30px);
+  line-height: 1.1;
+  margin: 0;
+}
+.testimonial-role {
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 0;
 }
 
 /* ---------------------------------
@@ -1161,6 +1147,7 @@ button {
   .steps-grid { grid-template-columns: 1fr 1fr; }
   .yesno-grid { grid-template-columns: 1fr; }
   .testimonial-grid { grid-template-columns: 1fr; }
+  .testimonial-card { min-height: 0; }
 }
 
 
