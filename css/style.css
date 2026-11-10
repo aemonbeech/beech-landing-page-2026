@@ -778,7 +778,7 @@ button {
   overflow: hidden;
   cursor: pointer;
   outline: none;
-  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: flex-grow 0.48s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 /* Colour bar across the top of each closed card */
 .q-card::before {
@@ -820,14 +820,14 @@ button {
 .q-title-sm {
   font-size: clamp(22px, 1.7vw, 30px);
   opacity: 1;
-  transition: opacity 0.3s ease 0.4s; /* fades back in once the card has narrowed */
+  transition: opacity 0.22s ease 0.32s; /* fades back in once the card has narrowed */
 }
 .q-title-lg {
   font-size: clamp(30px, 2.6vw, 44px);
   width: min(440px, 100%);
   min-width: 300px; /* fixed measure, so it never re-wraps mid-animation */
   opacity: 0;
-  transition: opacity 0.15s ease; /* gets out of the way fast when closing */
+  transition: opacity 0.12s ease; /* gets out of the way fast when closing */
 }
 .q-body {
   /* Fixed width so the text never re-wraps while the card animates */
@@ -855,12 +855,12 @@ button {
 .q-card.is-open::before { opacity: 0; }
 .q-card.is-open .q-num { color: inherit; opacity: 0.75; }
 .q-card.is-open .q-title-sm { opacity: 0; transition: opacity 0.12s ease; }
-.q-card.is-open .q-title-lg { opacity: 1; transition: opacity 0.35s ease 0.3s; }
+.q-card.is-open .q-title-lg { opacity: 1; transition: opacity 0.25s ease 0.22s; }
 .q-card.is-open .q-body {
   opacity: 1;
   transform: none;
   pointer-events: auto;
-  transition: opacity 0.35s ease 0.25s, transform 0.4s ease 0.25s;
+  transition: opacity 0.25s ease 0.2s, transform 0.3s ease 0.2s;
 }
 .q-card:focus-visible { box-shadow: 0 0 0 3px var(--color-ink); }
 
