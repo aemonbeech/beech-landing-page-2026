@@ -1146,6 +1146,35 @@ button {
 }
 
 /* ---------------------------------
+   Card hovers: a small lift like the buttons (mouse devices only, so
+   cards don't stay "stuck" raised after a tap on phones)
+--------------------------------- */
+.quad-card,
+.step-card,
+.testimonial-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .quad-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -12px rgba(17, 20, 20, 0.18);
+  }
+  .step-card:hover {
+    transform: translateY(-4px);
+    background-color: var(--color-yellow);
+    border-color: var(--color-yellow);
+    box-shadow: 0 12px 28px rgba(255, 209, 64, 0.45);
+  }
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(255, 209, 64, 0.5);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quad-card:hover, .step-card:hover, .testimonial-card:hover { transform: none; }
+}
+
+/* ---------------------------------
    Reveal-on-scroll
 --------------------------------- */
 .reveal {
