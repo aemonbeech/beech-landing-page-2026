@@ -79,6 +79,39 @@ a { color: inherit; text-decoration: none; }
   transition: text-decoration-color 0.2s ease;
 }
 .split-body a:hover { text-decoration-color: var(--color-yellow); }
+
+/* Keep previewed names on one line so the bubble doesn't flicker across a wrap */
+.split-body a[data-preview] { white-space: nowrap; }
+
+/* Floating site preview (created in script.js, desktop only) */
+.site-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 320px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  will-change: transform, opacity;
+}
+.site-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(17, 20, 20, 0.08), 0 18px 40px -12px rgba(17, 20, 20, 0.35);
+  transform: scale(0.92) rotate(-1.5deg);
+  transform-origin: top left;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.site-preview.is-visible { opacity: 1; }
+.site-preview.is-visible img { transform: scale(1) rotate(0deg); }
+@media (prefers-reduced-motion: reduce) {
+  .site-preview img, .site-preview.is-visible img { transform: none; transition: none; }
+}
 img { max-width: 100%; display: block; }
 button {
   font: inherit;

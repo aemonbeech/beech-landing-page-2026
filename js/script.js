@@ -152,4 +152,73 @@
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
+  // Site preview bubble: hovering a link with data-preview shows a screenshot
+  // card that trails the cursor. Desktop (fine pointer + hover) only.
+  var previewLinks = document.querySelectorAll("a[data-preview]");
+  var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (previewLinks.length && canHover) {
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var bubble = document.createElement("div");
+    bubble.className = "site-preview";
+    bubble.setAttribute("aria-hidden", "true");
+    var bubbleImg = document.createElement("img");
+    bubbleImg.alt = "";
+    bubble.appendChild(bubbleImg);
+    document.body.appendChild(bubble);
+
+    // Warm the cache so the first hover is instant
+    previewLinks.forEach(function (link) {
+      var pre = new Image();
+      pre.src = link.getAttribute("data-preview");
+    });
+
+    var OFFSET = 24;
+    var targetX = 0, targetY = 0, curX = 0, curY = 0;
+    var rafId = null, active = false;
+
+    function place(x, y) {
+      bubble.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+    }
+    function computeTarget(e) {
+      var w = bubble.offsetWidth, h = bubble.offsetHeight;
+      var x = e.clientX + OFFSET, y = e.clientY + OFFSET;
+      // Flip to the other side of the cursor near the viewport edges
+      if (x + w > window.innerWidth - 12) x = e.clientX - OFFSET - w;
+      if (y + h > window.innerHeight - 12) y = e.clientY - OFFSET - h;
+      targetX = x; targetY = y;
+    }
+    function tick() {
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+      place(curX, curY);
+      if (active || Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+      }
+    }
+
+    previewLinks.forEach(function (link) {
+      link.addEventListener("mouseenter", function (e) {
+        bubbleImg.src = link.getAttribute("data-preview");
+        computeTarget(e);
+        curX = targetX; curY = targetY;
+        place(curX, curY);
+        active = true;
+        bubble.classList.add("is-visible");
+        if (!reduceMotion && !rafId) rafId = requestAnimationFrame(tick);
+      });
+      link.addEventListener("mousemove", function (e) {
+        computeTarget(e);
+        if (reduceMotion) place(targetX, targetY);
+      });
+      link.addEventListener("mouseleave", function () {
+        active = false;
+        bubble.classList.remove("is-visible");
+      });
+    });
+    window.addEventListener("scroll", function () {
+      if (active) { active = false; bubble.classList.remove("is-visible"); }
+    }, { passive: true });
+  }
 })();
