@@ -66,7 +66,7 @@
     var n = card.getAttribute("data-q");
     if (!qSeen[n] && window.beechTrack) {
       qSeen[n] = true;
-      window.beechTrack("question_open", { question: card.querySelector(".q-title").textContent.trim() });
+      window.beechTrack("question_open", { question: card.querySelector(".q-title-lg").textContent.trim() });
     }
   }
   qCards.forEach(function (card) {

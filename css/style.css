@@ -802,13 +802,32 @@ button {
   color: var(--color-grey);
   transition: color 0.35s ease;
 }
+/* Two copies of each title, stacked in the same spot: a small one for the
+   narrow closed card and a large one for the open card. They cross-fade,
+   and each is hidden while the card is resizing, so neither is ever seen
+   re-wrapping or jumping between sizes. */
 .q-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* column follows the card width; the large title may overflow it while hidden */
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(22px, 1.7vw, 30px);
   line-height: 1.1;
   letter-spacing: -0.01em;
   margin: 14px 0 0;
+}
+.q-title-lg,
+.q-title-sm { grid-area: 1 / 1; }
+.q-title-sm {
+  font-size: clamp(22px, 1.7vw, 30px);
+  opacity: 1;
+  transition: opacity 0.3s ease 0.4s; /* fades back in once the card has narrowed */
+}
+.q-title-lg {
+  font-size: clamp(30px, 2.6vw, 44px);
+  width: min(440px, 100%);
+  min-width: 300px; /* fixed measure, so it never re-wraps mid-animation */
+  opacity: 0;
+  transition: opacity 0.15s ease; /* gets out of the way fast when closing */
 }
 .q-body {
   /* Fixed width so the text never re-wraps while the card animates */
@@ -835,7 +854,8 @@ button {
 }
 .q-card.is-open::before { opacity: 0; }
 .q-card.is-open .q-num { color: inherit; opacity: 0.75; }
-.q-card.is-open .q-title { font-size: clamp(30px, 2.6vw, 44px); }
+.q-card.is-open .q-title-sm { opacity: 0; transition: opacity 0.12s ease; }
+.q-card.is-open .q-title-lg { opacity: 1; transition: opacity 0.35s ease 0.3s; }
 .q-card.is-open .q-body {
   opacity: 1;
   transform: none;
@@ -878,8 +898,16 @@ button {
   }
   .q-card::before { opacity: 0; }
   .q-card .q-num { color: inherit; opacity: 0.75; }
-  .q-card .q-title,
-  .q-card.is-open .q-title { font-size: clamp(28px, 7.5vw, 34px); }
+  .q-card .q-title-sm,
+  .q-card.is-open .q-title-sm { display: none; }
+  .q-card .q-title-lg,
+  .q-card.is-open .q-title-lg {
+    font-size: clamp(28px, 7.5vw, 34px);
+    width: auto;
+    min-width: 0;
+    opacity: 1;
+    transition: none;
+  }
   .q-card .q-body {
     width: auto;
     min-width: 0;
@@ -890,7 +918,7 @@ button {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .q-card, .q-body, .q-card.is-open .q-body { transition: none; }
+  .q-card, .q-body, .q-card.is-open .q-body, .q-title-sm, .q-title-lg, .q-card.is-open .q-title-sm, .q-card.is-open .q-title-lg { transition: none; }
 }
 .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
 .tag {
