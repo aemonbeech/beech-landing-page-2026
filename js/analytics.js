@@ -1,13 +1,15 @@
 /*
   Analytics for the Website Effectiveness Audit page.
 
-  Fill in the two IDs below to switch tracking on. Until then this file
+  Fill in the IDs below to switch tracking on. Until then this file
   does nothing beyond keeping UTM tags for the Calendly booking links.
 
+  GTM_ID      Google Tag Manager container, looks like "GTM-XXXXXXX". Every event
+              below is also pushed to the dataLayer as a GTM custom event.
   GA4_ID      Google Analytics 4 measurement ID, looks like "G-XXXXXXXXXX"
   CLARITY_ID  Microsoft Clarity project ID, looks like "abcd1234ef"
 
-  Events sent (to both GA4 and Clarity):
+  Events sent (to GA4, Clarity and the GTM dataLayer):
     cta_click              any "Book a 20-minute call" button (location)
     booking_time_selected  someone picked a time in Calendly
     booking_complete       a call was actually booked  <- mark as key event in GA4
@@ -27,12 +29,21 @@
 (function () {
   "use strict";
 
+  var GTM_ID = "GTM-T2TL5SSK"; // Google Tag Manager container (for ad pixels etc. Do NOT add a GA4 tag in GTM, or visits count twice)
   var GA4_ID = "";      // e.g. "G-XXXXXXXXXX"
   var CLARITY_ID = "";  // e.g. "abcd1234ef"
 
   var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
 
   // ---- Load the tools (only when IDs are set) ----------------------------
+  window.dataLayer = window.dataLayer || [];
+  if (GTM_ID) {
+    window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+    var gtm = document.createElement("script");
+    gtm.async = true;
+    gtm.src = "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID;
+    document.head.appendChild(gtm);
+  }
   if (GA4_ID) {
     var ga = document.createElement("script");
     ga.async = true;
@@ -54,6 +65,11 @@
   function track(name, params) {
     params = params || {};
     if (window.gtag && GA4_ID) window.gtag("event", name, params);
+    if (GTM_ID) {
+      var push = { event: name };
+      Object.keys(params).forEach(function (k) { push[k] = params[k]; });
+      window.dataLayer.push(push);
+    }
     if (window.clarity && CLARITY_ID) {
       window.clarity("event", name);
       if (name === "booking_complete") window.clarity("set", "booked", "yes");
