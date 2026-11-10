@@ -53,7 +53,7 @@
     btn.addEventListener("click", function (e) {
       if (window.Calendly) {
         e.preventDefault();
-        window.Calendly.initPopupWidget({ url: calendlyUrl });
+        window.Calendly.initPopupWidget({ url: window.beechCalendlyUrl ? window.beechCalendlyUrl(calendlyUrl) : calendlyUrl });
       }
     });
   });
