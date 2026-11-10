@@ -16,15 +16,24 @@
   // Mobile nav toggle
   var navToggle = document.getElementById("navToggle");
   var mainNav = document.getElementById("mainNav");
+  function setNav(open) {
+    mainNav.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.documentElement.classList.toggle("nav-open", open);
+  }
   navToggle.addEventListener("click", function () {
-    var isOpen = mainNav.classList.toggle("is-open");
-    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    setNav(!mainNav.classList.contains("is-open"));
   });
   mainNav.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
-      mainNav.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
-    });
+    link.addEventListener("click", function () { setNav(false); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && mainNav.classList.contains("is-open")) { setNav(false); navToggle.focus(); }
+  });
+  // Close it if the screen grows past the mobile breakpoint while open
+  window.matchMedia("(min-width: 761px)").addEventListener("change", function (mq) {
+    if (mq.matches) setNav(false);
   });
 
   // FAQ accordion

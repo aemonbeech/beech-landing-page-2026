@@ -250,6 +250,7 @@ button {
   transition: color 0.2s ease;
 }
 .main-nav a:hover { color: var(--color-ink); }
+.main-nav-cta { display: none; }
 
 .header-actions { display: flex; align-items: center; gap: 16px; justify-self: end; }
 
@@ -1251,27 +1252,65 @@ button {
     text-wrap: balance;
   }
 
+  /* The nav leaves the grid on mobile, so drop the middle column and
+     the toggle sits hard right */
+  .header-inner { grid-template-columns: 1fr auto; }
+
+  /* Full-screen menu: fills everything below the header bar, so the logo
+     and the close button stay visible */
   .main-nav {
     position: fixed;
     top: var(--header-height);
     left: 0;
     right: 0;
+    height: calc(100dvh - var(--header-height));
+    justify-self: stretch; /* undo the desktop centring, which shrink-wraps a fixed box in Chrome */
     background: var(--color-bg);
     flex-direction: column;
-    gap: 0;
-    padding: 8px 20px 20px;
-    border-bottom: 1px solid var(--color-line);
-    transform: translateY(-12px);
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4vh, 36px);
+    padding: 24px 24px calc(48px + env(safe-area-inset-bottom));
+    overflow-y: auto;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s;
   }
   .main-nav.is-open {
     opacity: 1;
-    transform: translateY(0);
+    visibility: visible;
     pointer-events: auto;
+    transition: opacity 0.25s ease;
   }
-  .main-nav a { padding: 14px 0; border-bottom: 1px solid var(--color-line); }
+  .main-nav a {
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 11vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .main-nav.is-open a { opacity: 1; transform: none; }
+  .main-nav.is-open a:nth-child(2) { transition-delay: 0.05s; }
+  .main-nav.is-open a:nth-child(3) { transition-delay: 0.1s; }
+  .main-nav.is-open a:nth-child(4) { transition-delay: 0.15s; }
+  .main-nav.is-open a:nth-child(5) { transition-delay: 0.2s; }
+  .main-nav a.main-nav-cta {
+    display: inline-flex;
+    margin-top: 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0;
+    padding: 16px 28px;
+  }
+  /* Solid header while the menu is open, and no page scrolling behind it */
+  .site-header:has(.main-nav.is-open) { background: var(--color-bg); backdrop-filter: none; }
+  html.nav-open { overflow: hidden; }
   .header-actions .btn-small { display: none; }
   .nav-toggle { display: flex; }
   .price-card { padding: 32px 24px; }
@@ -1295,4 +1334,8 @@ button {
 @media (max-width: 420px) {
   .price-card { padding: 24px 16px; }
   .problem-card { padding: 28px 20px; }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .main-nav a { transform: none; transition: opacity 0.2s ease; }
 }
