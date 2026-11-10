@@ -30,7 +30,7 @@
   "use strict";
 
   var GTM_ID = "GTM-T2TL5SSK"; // Google Tag Manager container (for ad pixels etc. Do NOT add a GA4 tag in GTM, or visits count twice)
-  var GA4_ID = "";      // e.g. "G-XXXXXXXXXX"
+  var GA4_ID = "G-GQ521GDPV4";
   var CLARITY_ID = "";  // e.g. "abcd1234ef"
 
   var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
