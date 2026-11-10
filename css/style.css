@@ -1062,12 +1062,15 @@ button {
   border: 1px dashed var(--color-line);
   border-top: 3px solid var(--color-yellow);
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
 }
 .testimonial-card p {
   font-size: 1.25rem;
   line-height: 1.45;
   color: var(--color-ink);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  flex-grow: 1; /* keeps names aligned along the bottom of uneven quotes */
 }
 .testimonial-person {
   display: flex;
@@ -1092,7 +1095,13 @@ button {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-transform: uppercase;
   color: var(--color-grey);
+}
+.testimonial-name {
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 /* ---------------------------------
