@@ -16,6 +16,7 @@
     section_view           each section the visitor reaches (section)
     scroll_depth           25 / 50 / 75 / 90 percent of the page (percent)
     faq_open               an FAQ question opened (question)
+    question_open          one of the five audit question cards opened (question)
     client_preview         hover on a client link that shows the preview (client)
     outbound_click         click to a client site or social profile (url)
     contact_click          phone or email link clicked (method)

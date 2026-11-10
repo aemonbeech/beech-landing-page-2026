@@ -54,6 +54,27 @@
     });
   });
 
+  // The Product: expanding question cards. One open at a time; hover,
+  // keyboard focus or a click opens another (desktop layout only, on
+  // smaller screens every card is already fully shown in a swipe row)
+  var qCards = document.querySelectorAll(".q-card");
+  var qDesktop = window.matchMedia("(min-width: 901px)");
+  var qSeen = {};
+  function openQ(card) {
+    if (!qDesktop.matches || card.classList.contains("is-open")) return;
+    qCards.forEach(function (c) { c.classList.toggle("is-open", c === card); });
+    var n = card.getAttribute("data-q");
+    if (!qSeen[n] && window.beechTrack) {
+      qSeen[n] = true;
+      window.beechTrack("question_open", { question: card.querySelector(".q-title").textContent.trim() });
+    }
+  }
+  qCards.forEach(function (card) {
+    card.addEventListener("mouseenter", function () { openQ(card); });
+    card.addEventListener("focus", function () { openQ(card); });
+    card.addEventListener("click", function () { openQ(card); });
+  });
+
   // Calendly popup: open the scheduler in a modal from any "Book a call"
   // button, falling back to the normal #book-a-call anchor scroll if the
   // Calendly script hasn't loaded yet
@@ -119,8 +140,8 @@
     stepsTrack.style.transform = "translateY(" + -offset + "px)";
 
     if (radarCard) {
-      radarCard.classList.remove("emphasize-0", "emphasize-1", "emphasize-2", "emphasize-3");
-      if (index <= 3) radarCard.classList.add("emphasize-" + index);
+      radarCard.classList.remove("emphasize-0", "emphasize-1", "emphasize-2", "emphasize-3", "emphasize-4");
+      if (index <= 4) radarCard.classList.add("emphasize-" + index);
     }
   }
 

@@ -749,41 +749,148 @@ button {
 }
 
 /* ---------------------------------
-   The Product: quad grid
+   The Product: five expanding portrait cards
+   Desktop: a row of tall cards, one open (wider, filled with its colour,
+   detail showing); hover, focus or click opens another.
+   Smaller screens: a swipeable row where every card shows everything.
 --------------------------------- */
-.quad-grid {
+.q-cards {
+  --q-gap: 14px;
   margin-top: 56px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  display: flex;
+  gap: var(--q-gap);
+  height: clamp(440px, 34vw, 520px);
   text-align: left;
 }
-.quad-card {
+.q-card {
+  --q-accent: var(--color-yellow);
+  --q-on-accent: var(--color-ink);
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 26px 24px 28px;
   background: var(--color-bg);
   border: 1px solid var(--color-line);
-  border-top: 4px solid transparent;
   border-radius: 20px;
-  padding: 28px 26px 32px;
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
-.quad-card--yellow { border-top-color: var(--color-yellow); }
-.quad-card--red { border-top-color: #ff5d36; }
-.quad-card--blue { border-top-color: #4c6ef5; }
-.quad-card--black { border-top-color: var(--color-ink); }
-.quad-num {
+/* Colour bar across the top of each closed card */
+.q-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: var(--q-accent);
+  transition: opacity 0.35s ease;
+}
+.q-card--red { --q-accent: #ff5d36; }
+.q-card--blue { --q-accent: #4c6ef5; --q-on-accent: #fff; }
+.q-card--black { --q-accent: var(--color-ink); --q-on-accent: #fff; }
+.q-card--green { --q-accent: #1fa37a; }
+
+.q-num {
+  display: block;
   font-family: var(--font-mono);
   font-size: clamp(13px, 0.85vw, 15px);
   letter-spacing: 0.04em;
   color: var(--color-grey);
+  transition: color 0.35s ease;
 }
-.quad-card h3 {
+.q-title {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(24px, 2vw, 34px);
-  margin: 12px 0 12px;
+  font-size: clamp(22px, 1.7vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 14px 0 0;
 }
-.quad-card p {
-  color: var(--color-ink-soft);
+.q-body {
+  /* Fixed width so the text never re-wraps while the card animates */
+  width: min(440px, 100%);
+  min-width: 300px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+.q-body p {
   font-size: clamp(14.5px, 0.95vw, 16.5px);
+  line-height: 1.5;
+}
+.q-card .tag { color: inherit; border-color: currentColor; opacity: 0.75; }
+
+/* Open card */
+.q-card.is-open {
+  flex-grow: 3.4;
+  cursor: default;
+  background: var(--q-accent);
+  border-color: var(--q-accent);
+  color: var(--q-on-accent);
+}
+.q-card.is-open::before { opacity: 0; }
+.q-card.is-open .q-num { color: inherit; opacity: 0.75; }
+.q-card.is-open .q-title { font-size: clamp(30px, 2.6vw, 44px); }
+.q-card.is-open .q-body {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity 0.35s ease 0.25s, transform 0.4s ease 0.25s;
+}
+.q-card:focus-visible { box-shadow: 0 0 0 3px var(--color-ink); }
+
+@media (hover: hover) and (pointer: fine) {
+  .q-card:not(.is-open):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -12px rgba(17, 20, 20, 0.18);
+  }
+}
+
+/* Smaller screens: swipe through full cards */
+@media (max-width: 900px) {
+  .q-cards {
+    height: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* let the row bleed to the screen edges so the next card peeks in */
+    margin-left: calc(-1 * var(--container-pad));
+    margin-right: calc(-1 * var(--container-pad));
+    padding: 4px var(--container-pad) 8px;
+    scroll-padding: 0 var(--container-pad);
+  }
+  .q-cards::-webkit-scrollbar { display: none; }
+  .q-card,
+  .q-card.is-open {
+    flex: 0 0 min(78vw, 340px);
+    min-height: 420px;
+    scroll-snap-align: start;
+    cursor: auto;
+    background: var(--q-accent);
+    border-color: var(--q-accent);
+    color: var(--q-on-accent);
+  }
+  .q-card::before { opacity: 0; }
+  .q-card .q-num { color: inherit; opacity: 0.75; }
+  .q-card .q-title,
+  .q-card.is-open .q-title { font-size: clamp(28px, 7.5vw, 34px); }
+  .q-card .q-body {
+    width: auto;
+    min-width: 0;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .q-card, .q-body, .q-card.is-open .q-body { transition: none; }
 }
 .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
 .tag {
@@ -942,24 +1049,12 @@ button {
   .radar-key { font-size: 12px; gap: 8px 20px; }
 }
 .wedge { transition: opacity 0.5s ease; }
-.radar-card.emphasize-0 .wedge-1,
-.radar-card.emphasize-0 .wedge-2,
-.radar-card.emphasize-0 .wedge-3,
-.radar-card.emphasize-1 .wedge-0,
-.radar-card.emphasize-1 .wedge-2,
-.radar-card.emphasize-1 .wedge-3,
-.radar-card.emphasize-2 .wedge-0,
-.radar-card.emphasize-2 .wedge-1,
-.radar-card.emphasize-2 .wedge-3,
-.radar-card.emphasize-3 .wedge-0,
-.radar-card.emphasize-3 .wedge-1,
-.radar-card.emphasize-3 .wedge-2 {
-  opacity: 0.04;
-}
+.radar-card[class*="emphasize-"] .wedge { opacity: 0.04; }
 .radar-card.emphasize-0 .wedge-0,
 .radar-card.emphasize-1 .wedge-1,
 .radar-card.emphasize-2 .wedge-2,
-.radar-card.emphasize-3 .wedge-3 {
+.radar-card.emphasize-3 .wedge-3,
+.radar-card.emphasize-4 .wedge-4 {
   opacity: 0.4;
 }
 .radar-legend {
@@ -1149,16 +1244,11 @@ button {
    Card hovers: a small lift like the buttons (mouse devices only, so
    cards don't stay "stuck" raised after a tap on phones)
 --------------------------------- */
-.quad-card,
 .step-card,
 .testimonial-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
 }
 @media (hover: hover) and (pointer: fine) {
-  .quad-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 32px -12px rgba(17, 20, 20, 0.18);
-  }
   .step-card:hover {
     transform: translateY(-4px);
     background-color: var(--color-yellow);
@@ -1171,7 +1261,7 @@ button {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .quad-card:hover, .step-card:hover, .testimonial-card:hover { transform: none; }
+  .step-card:hover, .testimonial-card:hover { transform: none; }
 }
 
 /* ---------------------------------
@@ -1211,7 +1301,6 @@ button {
   .split-media { order: 0; }
   .split-copy { text-align: center; }
   .split-body { text-align: left; }
-  .quad-grid { grid-template-columns: 1fr; }
   /* Drop the pinned scroll stage entirely on smaller screens */
   .get-scroll-track { height: auto; }
   .get-stage {
@@ -1343,7 +1432,6 @@ button {
   .header-actions .btn-small { display: none; }
   .nav-toggle { display: flex; }
   .price-card { padding: 32px 24px; }
-  .quad-card { padding: 24px 20px 28px; }
   .step-card { padding: 24px 20px; }
   .yesno-col { padding: 24px 20px; }
   .get-step { opacity: 1; }
