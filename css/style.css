@@ -72,6 +72,13 @@ body {
 h1, h2, h3, p, ol, ul, figure { margin: 0; }
 ol, ul { padding: 0; list-style: none; }
 a { color: inherit; text-decoration: none; }
+.split-body a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.split-body a:hover { text-decoration-color: var(--color-yellow); }
 img { max-width: 100%; display: block; }
 button {
   font: inherit;
