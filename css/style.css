@@ -1075,8 +1075,20 @@ button {
 }
 .testimonial-person {
   display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.testimonial-photo {
+  width: clamp(56px, 4.4vw, 72px);
+  height: clamp(56px, 4.4vw, 72px);
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.testimonial-id {
+  display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 .testimonial-name {
   font-family: var(--font-serif);
